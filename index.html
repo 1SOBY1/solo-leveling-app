@@ -9,10 +9,84 @@
     />
     <meta name="theme-color" content="#05070d" />
     <title>Восхождение</title>
-    <script type="module" crossorigin src="/solo-leveling-app/assets/index-C7lkkqKY.js"></script>
-    <link rel="stylesheet" crossorigin href="/solo-leveling-app/assets/index-ChwzXYuN.css">
+
+    <!--
+      ПЕРВЫЙ КАДР ИГРЫ — ЗДЕСЬ, А НЕ В КОДЕ.
+
+      Между открытием мини-аппа и первым кадром React проходит время: браузер
+      должен скачать и разобрать 207 КБ кода. На мобильном интернете это
+      секунда-две, и всё это время игрок смотрел в пустоту — сначала белую
+      (пока не приехал файл стилей), потом чёрную.
+
+      Белая вспышка перед тёмной игрой — худшее, что можно показать первым
+      кадром: она читается как «что-то сломалось». Поэтому цвет и заставка
+      стоят ПРЯМО В РАЗМЕТКЕ, встроенным стилем: он не требует ни одного
+      сетевого запроса и работает с первого же байта страницы.
+
+      Разметку внутри `#root` React затирает при первой отрисовке сам
+      (`createRoot(...).render()` заменяет содержимое узла), поэтому убирать
+      её кодом не нужно и специального «спрятать заставку» не существует —
+      нечему сломаться.
+
+      «SOLO LEVELING» написано текстом, а не ключом словаря, и это не
+      нарушение правила №3: это название, оно одинаково на обоих языках, и
+      язык игрока в этот момент ещё неизвестен — словарь приезжает тем же
+      файлом кода, которого мы и ждём.
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #05070d;
+      }
+
+      .boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-family: 'JetBrains Mono', Consolas, 'SF Mono', monospace;
+        font-size: 12px;
+        letter-spacing: 0.42em;
+        text-indent: 0.42em;
+        color: #4fc3f7;
+        text-shadow: 0 0 12px rgba(79, 195, 247, 0.55);
+
+        /*
+          Заставка ПРОЯВЛЯЕТСЯ за полсекунды с задержкой в треть секунды.
+
+          На быстрой связи игра успевает загрузиться раньше, чем надпись
+          станет видимой, — и человек не увидит вообще никакого мигания.
+          На медленной он увидит, что игра жива, а не зависла. Мигающая на
+          долю секунды надпись хуже обоих случаев, поэтому задержка тут не
+          украшение, а главное в этом правиле.
+        */
+        opacity: 0;
+        animation: boot-in 0.5s ease-out 0.35s forwards;
+      }
+
+      @keyframes boot-in {
+        to {
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .boot {
+          animation: none;
+          opacity: 1;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/solo-leveling-app/assets/index-CRoBX1fq.js"></script>
+    <link rel="stylesheet" crossorigin href="/solo-leveling-app/assets/index-BIjIreSA.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot">SOLO LEVELING</div>
+    </div>
   </body>
 </html>
